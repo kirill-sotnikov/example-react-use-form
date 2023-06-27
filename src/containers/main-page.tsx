@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import { Item } from "../components/Item";
 
@@ -12,10 +12,6 @@ export const MainPage = () => {
   const form = useForm<FormDataType>();
   const content = form.watch("content");
   const { register, handleSubmit, formState, setValue, reset } = form;
-
-  useEffect(() => {
-    console.log(content);
-  }, [formState]);
 
   if (isEdit) {
     return (

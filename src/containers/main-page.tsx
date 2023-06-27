@@ -10,8 +10,9 @@ interface FormDataType extends FieldValues {
 export const MainPage = () => {
   const [isEdit, setIsEdit] = useState(true);
   const form = useForm<FormDataType>();
-  const content = form.watch("content");
-  const { register, handleSubmit, formState, setValue, reset } = form;
+  const formContent = form.watch("content");
+  const [content, setContent] = useState<FormDataType["content"]>();
+  const { handleSubmit, setValue, reset } = form;
 
   if (isEdit) {
     return (
@@ -20,20 +21,29 @@ export const MainPage = () => {
           action="submit"
           onSubmit={handleSubmit((data: FormDataType) => {
             setValue("content", data.content);
+            setContent(data.content);
             setIsEdit(false);
           })}
         >
-          {content &&
-            Object.entries(content).map((item) => (
+          {formContent &&
+            Object.entries({ ...formContent, ...content }).map((item) => (
               <Item isEdit={true} value={item[1]} id={item[0]} key={item[0]} />
             ))}
+          <button
+            onClick={() => {
+              setValue("content", content);
+              setIsEdit(false);
+            }}
+          >
+            cancel
+          </button>
           <button type="submit">submit</button>
           <button
             type="button"
             onClick={() => {
               const newObject = {};
               newObject[nanoid()] = "new";
-              setValue(`content`, { ...newObject, ...content });
+              setValue(`content`, { ...newObject, ...formContent });
             }}
           >
             add
